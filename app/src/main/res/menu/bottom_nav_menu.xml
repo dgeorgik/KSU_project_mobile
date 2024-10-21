@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/message_icon"
+        android:title="Уведомления" />
+    <item
+        android:id="@+id/navigation_accounting"
+        android:icon="@drawable/money_box"
+        android:title="Бухгалтерия" />
+    <item
+        android:id="@+id/navigation_assets"
+        android:icon="@drawable/builder_icon"
+        android:title="Активы" />
+    <item
+        android:id="@+id/navigation_accounts"
+        android:icon="@drawable/payment_icon"
+        android:title="Счета" />
+    <item
+        android:id="@+id/navigation_menu"
+        android:icon="@drawable/menu_icon"
+        android:title="Меню" />
+</menu>

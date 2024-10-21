@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/onboardFragment">
+
+    <fragment
+        android:id="@+id/onboardFragment"
+        android:name="com.example.ksu_project_mobile.fragments.OnboardFragment"
+        tools:layout="@layout/fragment_onboard">
+        <action
+            android:id="@+id/action_onboardFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.ksu_project_mobile.fragments.SignInFragment"
+        tools:layout="@layout/fragment_signin">
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/applicationStatusFragment"
+        android:name="com.example.ksu_project_mobile.fragments.ApplicationStatusFragment"
+        tools:layout="@layout/fragment_application_status">
+<!--        <action-->
+<!--            android:id="@+id/action_applicationStatusFragment_to_welcomeFragment"-->
+<!--            app:destination="@id/welcomeFragment" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.ksu_project_mobile.fragments.SignUpFragment"
+        tools:layout="@layout/fragment_signup">
+        <action
+            android:id="@+id/action_applicationStatusFragment_to_welcomeFragment"
+            app:destination="@id/applicationStatusFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.ksu_project_mobile.fragments.WelcomeFragment">
+        <action
+            android:id="@+id/action_welcomeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
+
+
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.ksu_project_mobile.fragments.HomeFragment"
+        tools:layout="@layout/fragment_home" />
+</navigation>
