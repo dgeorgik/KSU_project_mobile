@@ -1,6 +1,7 @@
 package com.example.ksu_project_mobile.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.ksu_project_mobile.R
 import com.example.ksu_project_mobile.models.UserViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -29,8 +31,21 @@ class HomeFragment : Fragment() {
         userViewModel.userName.observe(viewLifecycleOwner) { userName ->
             tvUserName.text = userName
         }
-    }
 
+         navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_employees -> {
+                    Log.d("Navigation", "Переход на фрагмент Сотрудники")
+                    findNavController().navigate(R.id.action_to_employeeFragment)
+                    true
+                }
+                else -> false
+            }.also {
+                val drawerLayout = view.findViewById<DrawerLayout>(R.id.drawer_layout)
+                drawerLayout.closeDrawer(GravityCompat.START)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,18 +56,10 @@ class HomeFragment : Fragment() {
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_notifications -> {
-                    true
-                }
-                R.id.navigation_accounting -> {
-                    true
-                }
-                R.id.navigation_assets -> {
-                    true
-                }
-                R.id.navigation_accounts -> {
-                    true
-                }
+                R.id.navigation_notifications -> true
+                R.id.navigation_accounting -> true
+                R.id.navigation_assets -> true
+                R.id.navigation_accounts -> true
                 R.id.navigation_menu -> {
                     val drawerLayout = view.findViewById<DrawerLayout>(R.id.drawer_layout)
                     drawerLayout.openDrawer(GravityCompat.START)

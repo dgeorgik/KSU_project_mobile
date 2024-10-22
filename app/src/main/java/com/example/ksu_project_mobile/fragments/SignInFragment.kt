@@ -19,17 +19,12 @@ class SignInFragment : Fragment() {
 
     private var _binding: FragmentSigninBinding? = null
     private val binding get() = _binding!!
-    private val userViewModel: UserViewModel by activityViewModels() // ViewModel на уровне активности
+    private val userViewModel: UserViewModel by activityViewModels()
 
-    // Предопределенный администратор
-    private val adminUser = User(
-        name = "Admin",
-        email = "admin@email.com",
-        password = "admin",
-        role = "admin"
-    )
+
 
     override fun onCreateView(
+
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -39,17 +34,29 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.btnSignIn.setOnClickListener {
             val email = binding.etLogin.text.toString()
             val password = binding.etPassword.text.toString()
 
-            if (email == adminUser.email && password == adminUser.password) {
-                 userViewModel.setUserName(adminUser.name)
-                val bundle = Bundle().apply {
-                    putParcelable("user", adminUser)
+            val user = userViewModel.authenticateUser(email, password)
+
+
+            if (user != null) {
+                if (user.role == "anautorize") {
+                    Toast.makeText(context, "Ждите одобрение заявки или зарегисрируйтесь!", Toast.LENGTH_SHORT).show()
+                } else {
+                    userViewModel.setUserName(user.name)
+                    val bundle = Bundle().apply {
+                        putParcelable("user", user)
+                    }
+                    findNavController().navigate(R.id.action_signInFragment_to_homeFragment, bundle)
                 }
-                 findNavController().navigate(R.id.action_signInFragment_to_homeFragment, bundle)
+//            if (email == adminUser.email && password == adminUser.password ) {
+//                userViewModel.setUserName(adminUser.name)
+//                val bundle = Bundle().apply {
+//                    putParcelable("user", adminUser)
+//                }
+//                 findNavController().navigate(R.id.action_signInFragment_to_homeFragment, bundle)
             } else {
                 Toast.makeText(
                     context,

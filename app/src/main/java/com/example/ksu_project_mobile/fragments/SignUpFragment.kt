@@ -4,15 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.ksu_project_mobile.R
 import com.example.ksu_project_mobile.databinding.FragmentSignupBinding
 import com.example.ksu_project_mobile.models.User
+import com.example.ksu_project_mobile.models.UserViewModel
 
 class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
+    private val userViewModel: UserViewModel by activityViewModels() // ViewModel на уровне активности
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +33,8 @@ class SignUpFragment : Fragment() {
             val email = binding.etSignupEmail.text.toString()
             val password = binding.etSignupPassword.text.toString()
 
-            val newUser = User(name = name, email = email, password = password, role = "user")
-
+            val newUser = User(name = name, email = email, password = password, role = "anautorize")
+            userViewModel.addUser(newUser)
 
             val bundle = Bundle().apply {
                 putParcelable("user", newUser)

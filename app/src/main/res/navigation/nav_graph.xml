@@ -53,10 +53,18 @@
     </fragment>
 
 
-
-
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.ksu_project_mobile.fragments.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_to_employeeFragment"
+            app:destination="@id/employeeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/employeeFragment"
+        android:name="com.example.ksu_project_mobile.fragments.EmployeesFragment"
+        android:label="Сотрудники"
+        tools:layout="@layout/fragment_employees" />
 </navigation>
