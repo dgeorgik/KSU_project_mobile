@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.NotificationsFragment">
+    tools:context=".fragments.CompanyReportsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -29,6 +29,4 @@
                 android:layout_gravity="center" />
         </FrameLayout>
     </androidx.appcompat.widget.Toolbar>
-
-    <!-- Content for Notifications -->
 </androidx.constraintlayout.widget.ConstraintLayout>

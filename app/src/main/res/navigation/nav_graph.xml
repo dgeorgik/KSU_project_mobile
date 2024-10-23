@@ -28,11 +28,7 @@
     <fragment
         android:id="@+id/applicationStatusFragment"
         android:name="com.example.ksu_project_mobile.fragments.ApplicationStatusFragment"
-        tools:layout="@layout/fragment_application_status">
-<!--        <action-->
-<!--            android:id="@+id/action_applicationStatusFragment_to_welcomeFragment"-->
-<!--            app:destination="@id/welcomeFragment" />-->
-    </fragment>
+        tools:layout="@layout/fragment_application_status" />
 
     <fragment
         android:id="@+id/signUpFragment"
@@ -43,7 +39,6 @@
             app:destination="@id/applicationStatusFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="com.example.ksu_project_mobile.fragments.WelcomeFragment">
@@ -51,7 +46,6 @@
             android:id="@+id/action_welcomeFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/homeFragment"
@@ -67,6 +61,46 @@
         android:name="com.example.ksu_project_mobile.fragments.EmployeesFragment"
         android:label="Сотрудники"
         tools:layout="@layout/fragment_employees" />
+
+    <!-- Уведомления -->
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.ksu_project_mobile.fragments.NotificationsFragment"
+        android:label="Уведомления"
+        tools:layout="@layout/fragment_notifications" />
+
+    <!-- Бухгалтерия -->
+    <fragment
+        android:id="@+id/accountingFragment"
+        android:name="com.example.ksu_project_mobile.fragments.AccountingFragment"
+        android:label="Бухгалтерия"
+        tools:layout="@layout/fragment_accounting" />
+
+    <!-- Активы -->
+    <fragment
+        android:id="@+id/assetsFragment"
+        android:name="com.example.ksu_project_mobile.fragments.AssetsFragment"
+        android:label="Активы"
+        tools:layout="@layout/fragment_assets" />
+
+    <!-- Счета -->
+    <fragment
+        android:id="@+id/accountsFragment"
+        android:name="com.example.ksu_project_mobile.fragments.AccountsFragment"
+        android:label="Счета"
+        tools:layout="@layout/fragment_accounts" />
+
+    <!-- Мой профиль -->
+    <fragment
+        android:id="@+id/myProfileFragment"
+        android:name="com.example.ksu_project_mobile.fragments.MyProfileFragment"
+        android:label="Мой профиль"
+        tools:layout="@layout/fragment_my_profile" />
+
+    <!-- Отчеты компании -->
+    <fragment
+        android:id="@+id/companyReportsFragment"
+        android:name="com.example.ksu_project_mobile.fragments.CompanyReportsFragment"
+        android:label="Отчеты компании"
+        tools:layout="@layout/fragment_company_reports" />
 </navigation>
-
-

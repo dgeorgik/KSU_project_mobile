@@ -43,6 +43,14 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(R.id.action_to_employeeFragment)
                     true
                 }
+                R.id.nav_profile -> {
+                    findNavController().navigate(R.id.myProfileFragment)
+                    true
+                }
+                R.id.nav_reports  -> {
+                    findNavController().navigate(R.id.companyReportsFragment)
+                    true
+                }
                 else -> false
             }.also {
                 val drawerLayout = view.findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -61,10 +69,22 @@ class HomeFragment : Fragment() {
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_notifications -> true
-                R.id.navigation_accounting -> true
-                R.id.navigation_assets -> true
-                R.id.navigation_accounts -> true
+                R.id.navigation_notifications -> {
+                findNavController().navigate(R.id.notificationsFragment)
+                true
+            }
+                R.id.navigation_accounting -> {
+                findNavController().navigate(R.id.accountingFragment)
+                true
+            }
+                R.id.navigation_assets -> {
+                    findNavController().navigate(R.id.assetsFragment)
+                    true
+                }
+                R.id.navigation_accounts -> {
+                    findNavController().navigate(R.id.accountsFragment)
+                    true
+                }
                 R.id.navigation_menu -> {
                     val drawerLayout = view.findViewById<DrawerLayout>(R.id.drawer_layout)
                     drawerLayout.openDrawer(GravityCompat.START)
