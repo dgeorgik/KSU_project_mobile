@@ -9,11 +9,15 @@ import com.example.ksu_project_mobile.R
 import androidx.navigation.fragment.findNavController
 
 import com.example.ksu_project_mobile.databinding.FragmentOnboardBinding
+import com.example.ksu_project_mobile.databinding.FragmentWelcomeBinding
 
 class OnboardFragment : Fragment() {
 
     private var _binding: FragmentOnboardBinding? = null
-    private val binding get() = _binding!!
+
+    private val binding: FragmentOnboardBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [OnboardFragment]")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

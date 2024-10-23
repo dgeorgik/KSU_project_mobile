@@ -18,10 +18,11 @@ import androidx.fragment.app.activityViewModels
 class SignInFragment : Fragment() {
 
     private var _binding: FragmentSigninBinding? = null
-    private val binding get() = _binding!!
     private val userViewModel: UserViewModel by activityViewModels()
 
 
+    private val binding: FragmentSigninBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [SignInFragment]")
 
     override fun onCreateView(
 

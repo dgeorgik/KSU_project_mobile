@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.ksu_project_mobile.R
+import com.example.ksu_project_mobile.databinding.FragmentSigninBinding
 import com.example.ksu_project_mobile.databinding.FragmentSignupBinding
 import com.example.ksu_project_mobile.models.User
 import com.example.ksu_project_mobile.models.UserViewModel
@@ -14,8 +15,12 @@ import com.example.ksu_project_mobile.models.UserViewModel
 class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignupBinding? = null
-    private val binding get() = _binding!!
-    private val userViewModel: UserViewModel by activityViewModels() // ViewModel на уровне активности
+    private val userViewModel: UserViewModel by activityViewModels()
+
+
+    private val binding: FragmentSignupBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [SignUpFragment]")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.ksu_project_mobile.R
+import com.example.ksu_project_mobile.databinding.FragmentSignupBinding
 import com.example.ksu_project_mobile.databinding.FragmentWelcomeBinding
 import com.example.ksu_project_mobile.models.User
 import kotlinx.coroutines.delay
@@ -19,7 +20,11 @@ import kotlinx.coroutines.launch
 class WelcomeFragment : Fragment() {
 
     private var _binding: FragmentWelcomeBinding? = null
-    private val binding get() = _binding!!
+
+    private val binding: FragmentWelcomeBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [WelcomeFragment]")
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
