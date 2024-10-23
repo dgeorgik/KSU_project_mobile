@@ -14,6 +14,10 @@ class UserViewModel : ViewModel() {
     private val _userName = MutableLiveData<String>()
     val userName: LiveData<String> get() = _userName
 
+
+    private val _userRole = MutableLiveData<String>()
+    val userRole: LiveData<String> get() = _userRole
+
     private val adminUser = User(
         name = "Админ Админович",
         email = "admin@email.com",
@@ -25,6 +29,7 @@ class UserViewModel : ViewModel() {
         _users.value = mutableListOf()
         addUser(adminUser)
         updateUserRole(adminUser, "Администратор")
+        _userRole.value = adminUser.role
     }
 
     fun setUserName(name: String) {
@@ -36,6 +41,9 @@ class UserViewModel : ViewModel() {
         updatedList.add(user)
         _users.value = updatedList
     }
+    fun setUserRole(role: String) {
+        _userRole.value = role
+    }
 
     fun updateUserRole(user: User, newRole: String) {
         val updatedList = _users.value?.map {
@@ -45,6 +53,8 @@ class UserViewModel : ViewModel() {
     }
 
     fun authenticateUser(email: String, password: String): User? {
+        val user = _users.value?.find {  it.email == email && it.password == password }
+        _userRole.value = user?.role
         return _users.value?.find { it.email == email && it.password == password }
     }
 

@@ -39,20 +39,19 @@ class EmployeesAdapter(private val userList: List<User>) :
         fun bind(user: User) {
             employeeName.text = user.name
 
-             val adapter = ArrayAdapter(itemView.context, android.R.layout.simple_spinner_item, roles)
+            val adapter = ArrayAdapter(itemView.context, android.R.layout.simple_spinner_item, roles)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             roleSpinner.adapter = adapter
 
-             val currentRoleIndex = roles.indexOf(user.role)
+            val currentRoleIndex = roles.indexOf(user.role)
             if (currentRoleIndex >= 0) {
                 roleSpinner.setSelection(currentRoleIndex)
             }
 
-             roleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            roleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                     val selectedRole = roles[position]
                     if (selectedRole != user.role) {
-
                         (itemView.context as? FragmentActivity)?.let { activity ->
                             val userViewModel: UserViewModel by activity.viewModels()
                             userViewModel.updateUserRole(user, selectedRole)
