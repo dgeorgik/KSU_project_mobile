@@ -5,4 +5,7 @@
     <item>Менеджер</item>
     <item>Администратор</item>
 </string-array>
+    <string name="mail_sent">Отправлено письмо</string>
+    <string name="close_button">Закрыть</string>
+    <string name="document_signed_icon">Иконка подписанного документа</string>
 </resources>
