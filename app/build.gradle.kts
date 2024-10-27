@@ -63,6 +63,7 @@ android {
 dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.gridlayout)
     val nav_version = "2.7.2"
 
     implementation("androidx.core:core-ktx:1.10.1")

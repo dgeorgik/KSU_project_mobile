@@ -24,7 +24,7 @@ class CompanyReportsFragment : Fragment() {
         val toolbar: Toolbar = binding.toolbar
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
-         val toolbarTitle: TextView = binding.root.findViewById(R.id.toolbar_title)
+        val toolbarTitle: TextView = binding.root.findViewById(R.id.toolbar_title)
         toolbarTitle.text = "Отчеты компании"
 
 

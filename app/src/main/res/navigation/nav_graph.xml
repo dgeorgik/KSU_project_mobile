@@ -103,4 +103,11 @@
         android:name="com.example.ksu_project_mobile.fragments.CompanyReportsFragment"
         android:label="Отчеты компании"
         tools:layout="@layout/fragment_company_reports" />
+
+    <!-- Актуальные договора -->
+    <fragment
+        android:id="@+id/currentContracts"
+        android:name="com.example.ksu_project_mobile.fragments.CurrentContractsFragment"
+        android:label="Отчеты компании"
+        tools:layout="@layout/fragment_company_reports" />
 </navigation>
