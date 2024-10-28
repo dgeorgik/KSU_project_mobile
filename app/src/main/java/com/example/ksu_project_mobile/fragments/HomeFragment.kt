@@ -51,6 +51,10 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(R.id.companyReportsFragment)
                     true
                 }
+                R.id.nav_current_reports  -> {
+                    findNavController().navigate(R.id.currentContracts)
+                    true
+                }
                 else -> false
             }.also {
                 val drawerLayout = view.findViewById<DrawerLayout>(R.id.drawer_layout)
