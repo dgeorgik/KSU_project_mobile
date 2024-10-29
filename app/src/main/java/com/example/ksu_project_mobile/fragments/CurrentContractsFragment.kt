@@ -15,7 +15,9 @@ import com.example.ksu_project_mobile.databinding.FragmentCurrentContractsBindin
 
 class CurrentContractsFragment : Fragment() {
     private var _binding: FragmentCurrentContractsBinding? = null
-    private val binding get() = _binding!!
+
+    private val binding: FragmentCurrentContractsBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [CurrentContractsFragment]")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

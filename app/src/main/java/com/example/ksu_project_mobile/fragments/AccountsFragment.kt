@@ -10,10 +10,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.ksu_project_mobile.R
 import com.example.ksu_project_mobile.databinding.FragmentAccountsBinding
+import com.example.ksu_project_mobile.databinding.FragmentApplicationStatusBinding
 
 class AccountsFragment : Fragment() {
     private var _binding: FragmentAccountsBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentAccountsBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [AccountsFragment]")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

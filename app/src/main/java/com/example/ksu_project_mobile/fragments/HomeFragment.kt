@@ -14,12 +14,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.ksu_project_mobile.R
+import com.example.ksu_project_mobile.databinding.FragmentHomeBinding
 import com.example.ksu_project_mobile.models.UserViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 class HomeFragment : Fragment() {
     private val userViewModel: UserViewModel by activityViewModels()
+    private var _binding: FragmentHomeBinding? = null
+
+    private val binding: FragmentHomeBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [HomeFragment]")
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

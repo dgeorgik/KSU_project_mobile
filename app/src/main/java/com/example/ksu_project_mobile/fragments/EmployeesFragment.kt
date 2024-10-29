@@ -8,11 +8,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ksu_project_mobile.R
+import com.example.ksu_project_mobile.databinding.FragmentEmployeesBinding
+import com.example.ksu_project_mobile.databinding.FragmentHomeBinding
 import com.example.ksu_project_mobile.models.UserViewModel
 
 class EmployeesFragment : Fragment() {
 
     private val userViewModel: UserViewModel by activityViewModels()
+    private var _binding: FragmentEmployeesBinding? = null
+
+    private val binding: FragmentEmployeesBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [EmployeesFragment]")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

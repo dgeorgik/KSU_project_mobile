@@ -13,7 +13,9 @@ import com.example.ksu_project_mobile.databinding.FragmentAccountingBinding
 
 class AccountingFragment : Fragment() {
     private var _binding: FragmentAccountingBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentAccountingBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [AccountingFragment]")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

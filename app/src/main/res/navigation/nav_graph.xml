@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_welcomeFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.example.ksu_project_mobile.models.User" />
     </fragment>
 
     <fragment
@@ -95,7 +98,11 @@
         android:id="@+id/myProfileFragment"
         android:name="com.example.ksu_project_mobile.fragments.MyProfileFragment"
         android:label="Мой профиль"
-        tools:layout="@layout/fragment_my_profile" />
+        tools:layout="@layout/fragment_my_profile">
+        <argument
+            android:name="user"
+            app:argType="com.example.ksu_project_mobile.models.User" />
+    </fragment>
 
     <!-- Отчеты компании -->
     <fragment

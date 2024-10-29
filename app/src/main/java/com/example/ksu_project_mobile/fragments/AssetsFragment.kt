@@ -10,10 +10,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.ksu_project_mobile.R
 import com.example.ksu_project_mobile.databinding.FragmentAssetsBinding
+import com.example.ksu_project_mobile.databinding.FragmentCompanyReportsBinding
 
 class AssetsFragment : Fragment() {
     private var _binding: FragmentAssetsBinding? = null
-    private val binding get() = _binding!!
+
+    private val binding: FragmentAssetsBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [AssetsFragment]")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

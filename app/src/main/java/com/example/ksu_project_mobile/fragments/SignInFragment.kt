@@ -1,6 +1,7 @@
 package com.example.ksu_project_mobile.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,17 +48,13 @@ class SignInFragment : Fragment() {
                     Toast.makeText(context, "Ждите одобрение заявки или зарегисрируйтесь!", Toast.LENGTH_SHORT).show()
                 } else {
                     userViewModel.setUserName(user.name)
+                    userViewModel.setUserNav(user)
+                    Log.d("SignInFragment", "User: ${user}")
                     val bundle = Bundle().apply {
                         putParcelable("user", user)
                     }
                     findNavController().navigate(R.id.action_signInFragment_to_homeFragment, bundle)
                 }
-//            if (email == adminUser.email && password == adminUser.password ) {
-//                userViewModel.setUserName(adminUser.name)
-//                val bundle = Bundle().apply {
-//                    putParcelable("user", adminUser)
-//                }
-//                 findNavController().navigate(R.id.action_signInFragment_to_homeFragment, bundle)
             } else {
                 Toast.makeText(
                     context,

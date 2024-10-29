@@ -21,9 +21,9 @@ class WelcomeFragment : Fragment() {
 
     private var _binding: FragmentWelcomeBinding? = null
 
+
     private val binding: FragmentWelcomeBinding
         get() = _binding ?: throw IllegalStateException("View binding is only available [WelcomeFragment]")
-
 
 
     override fun onCreateView(

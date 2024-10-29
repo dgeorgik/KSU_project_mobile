@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Генеральный директор"
         android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@android:color/black"
         android:layout_marginTop="4dp" />
 
     <!-- Карточка с электронной подписью -->

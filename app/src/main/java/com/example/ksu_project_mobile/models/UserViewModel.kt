@@ -58,4 +58,12 @@ class UserViewModel : ViewModel() {
         return _users.value?.find { it.email == email && it.password == password }
     }
 
+
+    private val _currentUser = MutableLiveData<User?>()
+    val currentUser: LiveData<User?> = _currentUser
+
+    fun setUserNav(user: User) {
+        _currentUser.value = user
+    }
+
 }
