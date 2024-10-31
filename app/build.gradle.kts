@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+    kotlin("plugin.serialization") version "1.9.20"
 }
 
 android {
@@ -64,6 +65,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.gridlayout)
+    implementation(libs.transport.runtime)
     val nav_version = "2.7.2"
 
     implementation("androidx.core:core-ktx:1.10.1")
@@ -86,4 +88,13 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.3.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1") // Обновите на актуальную версию
+    implementation("io.ktor:ktor-client-core:2.0.0")
+    implementation("io.ktor:ktor-client-cio:2.0.0")
+    implementation("io.ktor:ktor-client-serialization:2.0.0")
+    implementation("io.ktor:ktor-client-content-negotiation:2.0.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
 }

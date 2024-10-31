@@ -61,6 +61,10 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(R.id.currentContracts)
                     true
                 }
+                R.id.nav_calendar  -> {
+                    findNavController().navigate(R.id.calendarFragment)
+                    true
+                }
                 else -> false
             }.also {
                 val drawerLayout = view.findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -100,6 +104,7 @@ class HomeFragment : Fragment() {
                     drawerLayout.openDrawer(GravityCompat.START)
                     true
                 }
+
                 else -> false
             }
         }
