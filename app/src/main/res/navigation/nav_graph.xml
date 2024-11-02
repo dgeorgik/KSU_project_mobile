@@ -72,13 +72,6 @@
         android:label="Уведомления"
         tools:layout="@layout/fragment_notifications" />
 
-    <!-- Бухгалтерия -->
-    <fragment
-        android:id="@+id/accountingFragment"
-        android:name="com.example.ksu_project_mobile.fragments.AccountingFragment"
-        android:label="Бухгалтерия"
-        tools:layout="@layout/fragment_accounting" />
-
     <!-- Активы -->
     <fragment
         android:id="@+id/assetsFragment"
@@ -104,17 +97,32 @@
             app:argType="com.example.ksu_project_mobile.models.User" />
     </fragment>
 
-    <!-- Отчеты компании -->
-    <fragment
-        android:id="@+id/companyReportsFragment"
-        android:name="com.example.ksu_project_mobile.fragments.CompanyReportsFragment"
-        android:label="Отчеты компании"
-        tools:layout="@layout/fragment_company_reports" />
-
     <!-- Актуальные договора -->
     <fragment
         android:id="@+id/currentContracts"
         android:name="com.example.ksu_project_mobile.fragments.CurrentContractsFragment"
         android:label="Отчеты компании"
         tools:layout="@layout/fragment_company_reports" />
+
+    <!-- Отчеты компании -->
+    <fragment
+        android:id="@+id/reportsFragment"
+        android:name="com.example.ksu_project_mobile.fragments.ReportsFragment"
+        android:label="Отчеты компании"
+        tools:layout="@layout/fragment_reports" />
+
+    <!-- Бухгалтерия -->
+    <fragment
+        android:id="@+id/accountingFragment"
+        android:name="com.example.ksu_project_mobile.fragments.AccountingFragment"
+        android:label="Бухгалтерия"
+        tools:layout="@layout/fragment_accounting" />
+
+    <!--Менеджмент-->
+    <fragment
+        android:id="@+id/managementFragment"
+        android:name="com.example.ksu_project_mobile.fragments.ManagementFragment"
+        android:label="Менеджмент"
+        tools:layout="@layout/fragment_management" />
+
 </navigation>

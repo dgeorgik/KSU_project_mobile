@@ -5,17 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.ksu_project_mobile.databinding.FragmentAccountingBinding
+import com.example.ksu_project_mobile.databinding.FragmentManagementBinding
 
-class AccountingFragment : Fragment() {
-    private var _binding: FragmentAccountingBinding? = null
+class ManagementFragment : Fragment() {
+    private var _binding: FragmentManagementBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAccountingBinding.inflate(inflater, container, false)
+        _binding = FragmentManagementBinding.inflate(inflater, container, false)
         return binding.root
     }
 
