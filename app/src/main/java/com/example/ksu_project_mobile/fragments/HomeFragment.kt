@@ -65,6 +65,10 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(R.id.calendarFragment)
                     true
                 }
+                R.id.nav_settings -> {
+                    findNavController().navigate(R.id.settingsFragment)
+                    true
+                }
                 else -> false
             }.also {
                 val drawerLayout = view.findViewById<DrawerLayout>(R.id.drawer_layout)

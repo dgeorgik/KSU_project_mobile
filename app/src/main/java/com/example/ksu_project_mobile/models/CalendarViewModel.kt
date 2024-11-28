@@ -1,5 +1,6 @@
 package com.example.ksu_project_mobile.models
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ksu_project_mobile.repo.CalendarRepository
@@ -12,10 +13,26 @@ class CalendarViewModel : ViewModel() {
 
     fun fetchMonthData(year: Int, month: Int, onResult: (List<CalendarDayResponse>) -> Unit) {
         viewModelScope.launch {
-            val daysData = withContext(Dispatchers.IO) {
-                repository.getMonthInfo(year, month)
+            val totalDays = withContext(Dispatchers.IO) {
+                val monthsInfo = repository.fetchYearInfo(year)
+                monthsInfo.getOrNull(month-1)?.let { it.workingDays + it.notWorkingDays } ?: 0
             }
-            onResult(daysData)
+
+            if (totalDays > 0) {
+                val daysData = withContext(Dispatchers.IO) {
+                    Log.d("month " + month, "day " + totalDays)
+                    repository.getMonthInfo(year, month , totalDays)
+                }
+                onResult(daysData)
+            } else {
+                onResult(emptyList())
+            }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.close()
+    }
+
 }

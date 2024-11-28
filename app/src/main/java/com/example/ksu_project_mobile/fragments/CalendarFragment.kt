@@ -1,6 +1,9 @@
 package com.example.ksu_project_mobile.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +25,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ksu_project_mobile.R
 import com.example.ksu_project_mobile.models.CalendarDayResponse
 import com.example.ksu_project_mobile.models.CalendarViewModel
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,6 +35,7 @@ class CalendarFragment : Fragment() {
     private val viewModel: CalendarViewModel by viewModels()
     private lateinit var dayInfoAdapter: DayInfoAdapter
     private val dayInfoList = mutableListOf<CalendarDayResponse>()
+    private var isLoading by mutableStateOf(false)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +46,7 @@ class CalendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val progressBar = view.findViewById<View>(R.id.progressBar)
         val daysRecyclerView = view.findViewById<RecyclerView>(R.id.daysRecyclerView)
         dayInfoAdapter = DayInfoAdapter(dayInfoList)
         daysRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -48,10 +55,12 @@ class CalendarFragment : Fragment() {
         val composeView = view.findViewById<ComposeView>(R.id.composeCalendarView)
         val calendar = Calendar.getInstance().apply {
             set(Calendar.YEAR, 2024)
-            set(Calendar.MONTH, Calendar.OCTOBER)
+            set(Calendar.MONTH, Calendar.FEBRUARY)
         }
 
         fun loadMonthData(year: Int, month: Int) {
+            isLoading = true
+            updateLoadingUI(progressBar)
             viewModel.fetchMonthData(year, month) { days ->
                 dayInfoList.clear()
                 dayInfoList.addAll(days)
@@ -63,21 +72,46 @@ class CalendarFragment : Fragment() {
                         onPreviousMonth = {
                             calendar.add(Calendar.MONTH, -1)
                             loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)
+                            saveCalendarToFile(requireContext(), dayInfoList)
+
                         },
                         onNextMonth = {
                             calendar.add(Calendar.MONTH, 1)
                             loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)
+                            saveCalendarToFile(requireContext(), dayInfoList)
+
                         }
                     )
                 }
+                isLoading = false
+                updateLoadingUI(progressBar)
             }
         }
 
-        loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)
+
+        loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1)
+    }
+
+    private fun updateLoadingUI(progressBar: View) {
+        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun saveCalendarToFile(context: Context, calendarDays: List<CalendarDayResponse>) {
+        val fileName = "calendar_days.txt"
+        val fileContent = calendarDays.joinToString("\n") { "${it.date} - ${if (it.isWorkingDay) "Рабочий день" else "Выходной"}" }
+
+        val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: return
+        val file = File(fileDir, fileName)
+
+        FileOutputStream(file).use {
+            it.write(fileContent.toByteArray())
+            it.flush()
+        }
+
+        Log.d("CalendarFragment", "Файл сохранён в: ${file.absolutePath}")
     }
 }
-
-@Composable
+ @Composable
 fun CalendarScreen(
     calendar: Calendar,
     daysInMonth: List<CalendarDayResponse>,
@@ -125,7 +159,8 @@ fun CalendarScreen(
                 )
             }
 
-            val firstDayOfWeek = calendar.apply { set(Calendar.DAY_OF_MONTH, 1) }.get(Calendar.DAY_OF_WEEK) - 1
+            val firstDayOfWeek =
+                calendar.apply { set(Calendar.DAY_OF_MONTH, 1) }.get(Calendar.DAY_OF_WEEK) - 1
             items(firstDayOfWeek) { Spacer(modifier = Modifier.size(40.dp)) }
 
             items(daysInMonth.size) { index ->
@@ -174,5 +209,6 @@ fun CalendarScreen(
                 }
             )
         }
+
     }
 }

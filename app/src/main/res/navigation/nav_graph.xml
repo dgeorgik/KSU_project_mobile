@@ -125,4 +125,12 @@
         android:label="Calendar"
         tools:layout="@layout/activity_calendar" />
 
+    <!-- Настройки  -->
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.ksu_project_mobile.fragments.SettingsFragment"
+        android:label="Настройки"
+        tools:layout="@layout/fragment_settings" />
+
 </navigation>
