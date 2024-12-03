@@ -25,15 +25,15 @@ class CurrentContractsFragment : Fragment() {
     ): View {
         _binding = FragmentCurrentContractsBinding.inflate(inflater, container, false)
 
-        // Установка тулбара
+
         val toolbar: Toolbar = binding.toolbar
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
-        // Установка заголовка тулбара
+
         val toolbarTitle: TextView = binding.root.findViewById(R.id.toolbar_title)
         toolbarTitle.text = "Актуальные договора"
 
-        // Настройка RecyclerView
+
         val recyclerView: RecyclerView = binding.contractsRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = ContractsAdapter(getContracts())

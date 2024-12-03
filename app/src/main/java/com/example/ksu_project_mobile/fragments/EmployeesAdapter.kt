@@ -5,64 +5,67 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ksu_project_mobile.R
-import com.example.ksu_project_mobile.databinding.FragmentCurrentContractsBinding
-import com.example.ksu_project_mobile.databinding.FragmentEmployeesBinding
-import com.example.ksu_project_mobile.databinding.ItemEmployeeBinding
-import com.example.ksu_project_mobile.models.User
 import com.example.ksu_project_mobile.models.UserViewModel
 
-class EmployeesAdapter(private val userList: List<User>) :
-    RecyclerView.Adapter<EmployeesAdapter.EmployeeViewHolder>() {
-
-    private val roles = arrayOf("Незарегистрированный", "Бухгалтер", "Менеджер", "Администратор")
+class EmployeesAdapter(
+    private val userList: MutableList<UserEntity>,
+    private val userViewModel: UserViewModel
+) : RecyclerView.Adapter<EmployeesAdapter.EmployeeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployeeViewHolder {
-        val binding = ItemEmployeeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EmployeeViewHolder(binding)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_employee, parent, false)
+        return EmployeeViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: EmployeeViewHolder, position: Int) {
         val user = userList[position]
-        holder.bind(user)
+        holder.bind(user, userViewModel, position)
     }
 
     override fun getItemCount(): Int = userList.size
 
-    inner class EmployeeViewHolder(private val binding: ItemEmployeeBinding) : RecyclerView.ViewHolder(binding.root) {
+    // ViewHolder для сотрудника
+    inner class EmployeeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val nameTextView: TextView = itemView.findViewById(R.id.tv_employee_name)
+        private val roleSpinner: Spinner = itemView.findViewById(R.id.spinner_role)
+        private val deleteButton: Button = itemView.findViewById(R.id.btn_delete)
 
-        fun bind(user: User) {
-            binding.tvEmployeeName.text = user.name
+        fun bind(user: UserEntity, userViewModel: UserViewModel, position: Int) {
+            nameTextView.text = user.name
 
+             val roles = listOf("admin", "employee", "manager")
             val adapter = ArrayAdapter(itemView.context, android.R.layout.simple_spinner_item, roles)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinnerRole.adapter = adapter
+            roleSpinner.adapter = adapter
 
-            val currentRoleIndex = roles.indexOf(user.role)
-            if (currentRoleIndex >= 0) {
-                binding.spinnerRole.setSelection(currentRoleIndex)
+            val rolePosition = roles.indexOf(user.role)
+            if (rolePosition >= 0) {
+                roleSpinner.setSelection(rolePosition)
             }
 
-            binding.spinnerRole.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    val selectedRole = roles[position]
-                    if (selectedRole != user.role) {
-                        (itemView.context as? FragmentActivity)?.let { activity ->
-                            val userViewModel: UserViewModel by activity.viewModels()
-                            userViewModel.updateUserRole(user, selectedRole)
-                            Toast.makeText(activity, "Роль изменена на $selectedRole", Toast.LENGTH_SHORT).show()
-                        }
+            roleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val newRole = roles[position]
+                    if (newRole != user.role) {
+                        userViewModel.updateUser(user.copy(role = newRole))
                     }
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                 }
+            }
+
+             deleteButton.setOnClickListener {
+                 userViewModel.deleteUser(user)
+
+                 userList.removeAt(position)
+                notifyItemRemoved(position)
             }
         }
     }

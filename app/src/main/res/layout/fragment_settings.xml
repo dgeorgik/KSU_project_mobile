@@ -42,6 +42,20 @@
                     android:text="Тёмная тема" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/fontSizeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Размер шрифта: 14sp" />
+
+            <SeekBar
+                android:id="@+id/fontSizeSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="30"
+                android:progress="14" />
+
 
             <View
                 android:layout_width="match_parent"

@@ -33,15 +33,15 @@ class HomeFragment : Fragment() {
         val navView: NavigationView = view.findViewById(R.id.nav_view)
         val headerView: View = navView.getHeaderView(0)
         val tvUserName: TextView = headerView.findViewById(R.id.tv_user_name)
+//
+//         userViewModel.userName.observe(viewLifecycleOwner) { userName ->
+//            tvUserName.text = userName
+//        }
 
-         userViewModel.userName.observe(viewLifecycleOwner) { userName ->
-            tvUserName.text = userName
-        }
-
-         userViewModel.userRole.observe(viewLifecycleOwner) { userRole ->
-            val toolbarTitle: TextView = view.findViewById(R.id.toolbar_title)
-            toolbarTitle.text = "Главная [$userRole]"
-        }
+//         userViewModel.userRole.observe(viewLifecycleOwner) { userRole ->
+//            val toolbarTitle: TextView = view.findViewById(R.id.toolbar_title)
+//            toolbarTitle.text = "Главная [$userRole]"
+//        }
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {

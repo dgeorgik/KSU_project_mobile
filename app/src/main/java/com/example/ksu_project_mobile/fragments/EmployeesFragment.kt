@@ -1,16 +1,18 @@
 package com.example.ksu_project_mobile.fragments
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ksu_project_mobile.R
 import com.example.ksu_project_mobile.databinding.FragmentEmployeesBinding
-import com.example.ksu_project_mobile.databinding.FragmentHomeBinding
 import com.example.ksu_project_mobile.models.UserViewModel
+import kotlinx.coroutines.flow.collect
 
 class EmployeesFragment : Fragment() {
 
@@ -24,17 +26,26 @@ class EmployeesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_employees, container, false)
+        _binding = FragmentEmployeesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_employees)
+        val recyclerView: RecyclerView = binding.recyclerViewEmployees
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        userViewModel.users.observe(viewLifecycleOwner) { userList ->
-            recyclerView.adapter = EmployeesAdapter(userList)
+         lifecycleScope.launchWhenStarted {
+            userViewModel.users.collect { userList ->
+                 val adapter = EmployeesAdapter(userList.toMutableList(), userViewModel)
+                recyclerView.adapter = adapter
+            }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

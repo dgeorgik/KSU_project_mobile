@@ -7,15 +7,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.ksu_project_mobile.databinding.FragmentSettingsBinding
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.io.File
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentSettingsBinding
+        get() = _binding ?: throw IllegalStateException("View binding is only available [FragmentSettingsBinding]")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +33,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPreferences = requireContext()
-            .getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val sharedPreferences = requireContext().getSharedPreferences("app_settings", Context.MODE_PRIVATE)
 
 
         binding.lightThemeButton.setOnClickListener {
@@ -41,7 +45,10 @@ class SettingsFragment : Fragment() {
             applyTheme(isDarkMode = true)
             sharedPreferences.edit().putBoolean("dark_mode", true).apply()
         }
-         updateFileStatus()
+
+         setupFontSizeSeekBar()
+
+        updateFileStatus()
 
         binding.deleteFileButton.setOnClickListener {
             if (isCalendarFilePresent(requireContext())) {
@@ -56,8 +63,6 @@ class SettingsFragment : Fragment() {
             }
         }
 
-
-
         binding.restoreFileButton.setOnClickListener {
             if (restoreCalendarFile(requireContext())) {
                 updateFileStatus()
@@ -69,6 +74,37 @@ class SettingsFragment : Fragment() {
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
+    }
+
+    private fun setupFontSizeSeekBar() {
+        lifecycleScope.launch {
+            val fontSize = requireContext().dataStore.data.first()[FONT_SIZE_KEY] ?: 14
+            binding.fontSizeSeekBar.progress = fontSize
+            binding.fontSizeLabel.text = "Размер шрифта: ${fontSize}sp"
+        }
+
+        binding.fontSizeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.fontSizeLabel.text = "Размер шрифта: ${progress}sp"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                seekBar?.progress?.let { fontSize ->
+                    lifecycleScope.launch {
+                        requireContext().dataStore.edit { preferences ->
+                            preferences[FONT_SIZE_KEY] = fontSize
+                            val dataStorePath = "${requireContext().filesDir.absolutePath}/datastore"
+                            Log.d(
+                                "SettingsFragment",
+                                "Размер шрифта $fontSize сохранён в DataStore: $dataStorePath"
+                            )
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun isCalendarFilePresent(context: Context): Boolean {
@@ -113,29 +149,27 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    private fun restoreCalendarFile(context: Context): Boolean {
+        val internalFileDir = context.filesDir
+        val internalFile = File(internalFileDir, "calendar_backup.txt")
 
-        private fun restoreCalendarFile(context: Context): Boolean {
-            val internalFileDir = context.filesDir
-            val internalFile = File(internalFileDir, "calendar_backup.txt")
-
-            if (!internalFile.exists()) {
-                Log.d("SettingsFragment", "Резервная копия отсутствует")
-                return false
-            }
-
-            val externalFileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: return false
-            val externalFile = File(externalFileDir, "calendar_days.txt")
-
-            return try {
-                internalFile.copyTo(externalFile, overwrite = true)
-                Log.d("SettingsFragment", "Файл восстановлен: ${externalFile.absolutePath}")
-                true
-            } catch (e: Exception) {
-                Log.e("SettingsFragment", "Ошибка восстановления файла", e)
-                false
-            }
+        if (!internalFile.exists()) {
+            Log.d("SettingsFragment", "Резервная копия отсутствует")
+            return false
         }
 
+        val externalFileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: return false
+        val externalFile = File(externalFileDir, "calendar_days.txt")
+
+        return try {
+            internalFile.copyTo(externalFile, overwrite = true)
+            Log.d("SettingsFragment", "Файл восстановлен: ${externalFile.absolutePath}")
+            true
+        } catch (e: Exception) {
+            Log.e("SettingsFragment", "Ошибка восстановления файла", e)
+            false
+        }
+    }
 
     private fun updateFileStatus() {
         val isFilePresent = isCalendarFilePresent(requireContext())

@@ -38,7 +38,7 @@ class SignUpFragment : Fragment() {
             val email = binding.etSignupEmail.text.toString()
             val password = binding.etSignupPassword.text.toString()
 
-            val newUser = User(name = name, email = email, password = password, role = "anautorize")
+            val newUser = UserEntity(name = name, email = email, password = password, role = "anautorize")
             userViewModel.addUser(newUser)
 
             val bundle = Bundle().apply {

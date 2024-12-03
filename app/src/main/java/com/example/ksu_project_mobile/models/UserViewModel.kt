@@ -1,69 +1,66 @@
 package com.example.ksu_project_mobile.models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.example.ksu_project_mobile.fragments.UserEntity
+import com.example.ksu_project_mobile.fragments.UserRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
+class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
+    private val _currentUser = MutableLiveData<UserEntity?>()
+    val currentUser: LiveData<UserEntity?> get() = _currentUser
 
-class UserViewModel : ViewModel() {
+    val users: StateFlow<List<UserEntity>> = repository.users
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    private val _users = MutableLiveData<List<User>>()
-    val users: LiveData<List<User>> get() = _users
+    suspend fun authenticateUser(email: String, password: String): UserEntity? {
+        return repository.authenticateUser(email, password).also { user ->
+            _currentUser.value = user
+        }
+    }
 
-    private val _userName = MutableLiveData<String>()
-    val userName: LiveData<String> get() = _userName
+    fun addUser(user: UserEntity) {
+        viewModelScope.launch {
+            repository.insertUser(user)
+        }
+    }
 
+    fun updateUser(user: UserEntity) {
+        viewModelScope.launch {
+            repository.updateUser(user)
+        }
+    }
 
-    private val _userRole = MutableLiveData<String>()
-    val userRole: LiveData<String> get() = _userRole
+    fun initData() {
+        viewModelScope.launch {
+            repository.insertAdminIfNotExists()
+        }
+    }
 
-    private val adminUser = User(
-        name = "Админ Админович",
-        email = "admin@email.com",
-        password = "admin",
-        role = "admin"
-    )
+    fun setUserRole(role: String) {
+        _currentUser.value?.let { user ->
+            val updatedUser = user.copy(role = role)
+            updateUser(updatedUser)
+        }
+    }
 
-    init {
-        _users.value = mutableListOf()
-        addUser(adminUser)
-        updateUserRole(adminUser, "Администратор")
-        _userRole.value = adminUser.role
+    fun setUserNav(user: UserEntity) {
+        _currentUser.value = user
     }
 
     fun setUserName(name: String) {
-        _userName.value = name
-    }
-
-    fun addUser(user: User) {
-        val updatedList = _users.value?.toMutableList() ?: mutableListOf()
-        updatedList.add(user)
-        _users.value = updatedList
-    }
-    fun setUserRole(role: String) {
-        _userRole.value = role
-    }
-
-    fun updateUserRole(user: User, newRole: String) {
-        val updatedList = _users.value?.map {
-            if (it.email == user.email) it.copy(role = newRole) else it
+        _currentUser.value?.let { user ->
+            val updatedUser = user.copy(name = name)
+            updateUser(updatedUser)
         }
-        _users.value = updatedList
     }
-
-    fun authenticateUser(email: String, password: String): User? {
-        val user = _users.value?.find {  it.email == email && it.password == password }
-        _userRole.value = user?.role
-        return _users.value?.find { it.email == email && it.password == password }
-    }
-
-
-    private val _currentUser = MutableLiveData<User?>()
-    val currentUser: LiveData<User?> = _currentUser
-
-    fun setUserNav(user: User) {
-        _currentUser.value = user
+    fun deleteUser(user: UserEntity) {
+        viewModelScope.launch {
+            repository.deleteUser(user)  // Удаление пользователя из репозитория
+        }
     }
 
 }

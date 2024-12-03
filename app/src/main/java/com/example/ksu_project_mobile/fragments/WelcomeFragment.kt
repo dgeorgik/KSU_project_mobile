@@ -37,9 +37,10 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val user = arguments?.getParcelable<User>("user")
-        user?.let {
-            binding.tvUserName.text = "Добро пожаловать, ${it.name}!"
+        val userEntity = arguments?.getParcelable<UserEntity>("user")
+        userEntity?.let {
+            val user = User(it.id, it.name!!, it.email!!, it.password!!, it.role!!)
+            binding.tvUserName.text = "Добро пожаловать, ${user.name}!"
         }
 
         lifecycleScope.launch {
