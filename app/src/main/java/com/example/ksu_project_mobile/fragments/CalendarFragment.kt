@@ -20,14 +20,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ksu_project_mobile.R
 import com.example.ksu_project_mobile.models.CalendarDayResponse
 import com.example.ksu_project_mobile.models.CalendarViewModel
+import com.example.ksu_project_mobile.models.MonthInfos
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -61,10 +65,25 @@ class CalendarFragment : Fragment() {
         fun loadMonthData(year: Int, month: Int) {
             isLoading = true
             updateLoadingUI(progressBar)
-            viewModel.fetchMonthData(year, month) { days ->
-                dayInfoList.clear()
-                dayInfoList.addAll(days)
-                dayInfoAdapter.notifyDataSetChanged()
+
+            lifecycleScope.launch {
+                val cachedData = withContext(Dispatchers.IO) {
+                    viewModel.getCalendarDaysFromDatabase(year, month)
+                }
+
+                if (cachedData.isNotEmpty()) {
+                    dayInfoList.clear()
+                    dayInfoList.addAll(cachedData.map { it.toCalendarDayResponse() })
+                    dayInfoAdapter.notifyDataSetChanged()
+                } else {
+                    viewModel.fetchMonthData(year, month) { days ->
+                        dayInfoList.clear()
+                        dayInfoList.addAll(days)
+                        saveCalendarToDatabase(days)
+                        dayInfoAdapter.notifyDataSetChanged()
+                    }
+                }
+
                 composeView.setContent {
                     CalendarScreen(
                         calendar = calendar,
@@ -72,14 +91,10 @@ class CalendarFragment : Fragment() {
                         onPreviousMonth = {
                             calendar.add(Calendar.MONTH, -1)
                             loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)
-                            saveCalendarToFile(requireContext(), dayInfoList)
-
                         },
                         onNextMonth = {
                             calendar.add(Calendar.MONTH, 1)
                             loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)
-                            saveCalendarToFile(requireContext(), dayInfoList)
-
                         }
                     )
                 }
@@ -88,30 +103,36 @@ class CalendarFragment : Fragment() {
             }
         }
 
-
-        loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1)
+        loadMonthData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)
     }
 
     private fun updateLoadingUI(progressBar: View) {
         progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun saveCalendarToFile(context: Context, calendarDays: List<CalendarDayResponse>) {
-        val fileName = "calendar_days.txt"
-        val fileContent = calendarDays.joinToString("\n") { "${it.date} - ${if (it.isWorkingDay) "Рабочий день" else "Выходной"}" }
-
-        val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: return
-        val file = File(fileDir, fileName)
-
-        FileOutputStream(file).use {
-            it.write(fileContent.toByteArray())
-            it.flush()
+    private fun saveCalendarToDatabase(calendarDays: List<CalendarDayResponse>) {
+        val calendarDaysEntities = calendarDays.map {
+            CalendarDayEntity(
+                year = it.year,
+                month = it.month.id,
+                day = it.date,
+                isWorkingDay = it.isWorkingDay,
+                holiday = it.holiday
+            )
         }
 
-        Log.d("CalendarFragment", "Файл сохранён в: ${file.absolutePath}")
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.saveCalendarDays(calendarDaysEntities)
+        }
+
+        Log.d("CalendarFragment", "Данные сохранены в базу")
     }
 }
- @Composable
+
+
+
+
+@Composable
 fun CalendarScreen(
     calendar: Calendar,
     daysInMonth: List<CalendarDayResponse>,
@@ -164,7 +185,7 @@ fun CalendarScreen(
             items(firstDayOfWeek) { Spacer(modifier = Modifier.size(40.dp)) }
 
             items(daysInMonth.size) { index ->
-                val day = daysInMonth[index].date.split("-")[2].split("T")[0]
+                val day = daysInMonth[index].date.split("-")?.getOrNull(2)?.split("T")?.getOrNull(0) ?: "Ошибка"
                 Text(
                     text = day,
                     modifier = Modifier
@@ -198,7 +219,7 @@ fun CalendarScreen(
                                 day.isWorkingDay -> "Рабочий день"
                                 else -> "Выходной"
                             }
-                            Text(text = "${day.date.split("T")[0]} - $dayType")
+                            Text(text = "${day.date ?: "Неизвестно"} - $dayType") // Используйте day, если нет поля `date`
                         }
                     }
                 },
@@ -209,6 +230,5 @@ fun CalendarScreen(
                 }
             )
         }
-
     }
 }

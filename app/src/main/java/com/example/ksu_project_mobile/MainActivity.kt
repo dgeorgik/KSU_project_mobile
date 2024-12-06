@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         val headerView: View = navView.getHeaderView(0)
         val tvUserName: TextView = headerView.findViewById(R.id.tv_user_name)
 
-        val database = AppDatabase.getInstance(applicationContext)  // Предположим, что у вас есть AppDatabase
+        val database = AppDatabase.getInstance(applicationContext)
         val userDao = database.userDao()
         val repository = UserRepository(userDao)
         val factory = UserViewModelFactory(repository)
@@ -49,10 +49,9 @@ class MainActivity : AppCompatActivity() {
 
         userViewModel.initData()
 
-        // Наблюдаем за текущим пользователем
-        userViewModel.currentUser.observe(this, Observer { user ->
+         userViewModel.currentUser.observe(this, Observer { user ->
             user?.let {
-                tvUserName.text = it.name  // Обновляем UI с именем пользователя
+                tvUserName.text = it.name
             }
         })
 
@@ -60,26 +59,21 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Настроим action bar с NavController для навигации
-        setupActionBarWithNavController(navController)
+         setupActionBarWithNavController(navController)
 
-        // Настройка меню навигации
-        navView.setNavigationItemSelectedListener { menuItem ->
+         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_profile -> {
-                    // Логика для перехода на профиль
-                    Log.i("MainActivity", "Profile clicked")
+                     Log.i("MainActivity", "Profile clicked")
                     true
                 }
                 R.id.nav_reports -> {
-                    // Логика для перехода на отчеты
-                    Log.i("MainActivity", "Reports clicked")
+                     Log.i("MainActivity", "Reports clicked")
                     true
                 }
                 R.id.nav_employees -> {
-                    // Логика для перехода на сотрудников
-                    Log.i("MainActivity", "Employees clicked")
-                    navController.navigate(R.id.action_to_employeeFragment)  // Пример навигации
+                     Log.i("MainActivity", "Employees clicked")
+                    navController.navigate(R.id.action_to_employeeFragment)
                     true
                 }
                 else -> false
